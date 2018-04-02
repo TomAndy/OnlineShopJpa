@@ -1,6 +1,6 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.consts.ErrorCodes;
 import com.mp.onlinestore.consts.JdbcConstants;
 import com.mp.onlinestore.dao.CategoryDao;
@@ -22,7 +22,7 @@ public class CategoryDaoImpl implements CategoryDao{
     static Logger log = Logger.getLogger(CategoryDaoImpl.class.toString());
 
     @Override
-    public boolean createCategory(final Category category) throws GenericException {
+    public Category createCategory(final Category category) throws GenericException {
         log.info("Need to store category into db: " + category);
 
         Connection conn = new ConnectToDb().getConnection();
@@ -33,13 +33,13 @@ public class CategoryDaoImpl implements CategoryDao{
             int rowsInserted = st.executeUpdate();
             if(rowsInserted>=1) {
                 st.close();
-                return true;
+                return category;
             }
             else {
                 //System.out.println("No categories were saved");
                 log.info("No categories were saved");
                 st.close();
-                return false;
+                return null;
             }
         } catch (SQLException e) {
             throw new GenericException(ErrorCodes.DB_TABLE_ERROR);
@@ -80,7 +80,7 @@ public class CategoryDaoImpl implements CategoryDao{
     }
 
     @Override
-    public boolean updateCategory(final Category category) throws GenericException {
+    public Category updateCategory(final Category category) throws GenericException {
         Connection conn = new ConnectToDb().getConnection();
 
         try {
@@ -90,13 +90,13 @@ public class CategoryDaoImpl implements CategoryDao{
             int rowsUpdated = st.executeUpdate();
             if(rowsUpdated>=1) {
                 st.close();
-                return true;
+                return category;
             }
             else {
                 //System.out.println("No categories were updated");
                 log.info("No categories were updated");
                 st.close();
-                return false;
+                return null;
             }
         } catch (SQLException e) {
 //            e.printStackTrace();
@@ -107,8 +107,10 @@ public class CategoryDaoImpl implements CategoryDao{
     }
 
     @Override
-    public boolean deleteCategory(final Long categoryID) throws GenericException {
+    public Category deleteCategory(final Long categoryID) throws GenericException {
         Connection conn = new ConnectToDb().getConnection();
+        Category category = new Category();
+        category.setCategoryId(categoryID);
 
         try {
             PreparedStatement st = conn.prepareStatement(String.format(JdbcConstants.CATEGORY_DELETE_CATEGORY_BY_ID_QUERY,
@@ -117,13 +119,13 @@ public class CategoryDaoImpl implements CategoryDao{
             int rowsDeleted = st.executeUpdate();
             if(rowsDeleted>=1) {
                 st.close();
-                return true;
+                return category;
             }
             else {
                 //System.out.println("No categories were deleted");
                 log.info("No categories were deleted");
                 st.close();
-                return false;
+                return null;
             }
         }
         catch (SQLException e) {

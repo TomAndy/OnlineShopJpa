@@ -60,16 +60,16 @@ public class ClientDaoImplTest {
     public void createClientTest() throws Exception {
         client = new Client(1, null, null, null);
         Mockito.when(stmt.executeUpdate()).thenReturn(1);
-        boolean res = unit.createClient(client);
-        Assert.assertTrue(res);
+        Client res = unit.createClient(client);
+        Assert.assertNotNull(res);
     }
 
     @Test
     public void createClientTest_Negative() throws Exception {
         client = new Client(1, null, null, null);
         Mockito.when(stmt.executeUpdate()).thenReturn(0);
-        boolean res = unit.createClient(client);
-        Assert.assertFalse(res);
+        Client res = unit.createClient(client);
+        Assert.assertNull(res);
     }
 
     @Test

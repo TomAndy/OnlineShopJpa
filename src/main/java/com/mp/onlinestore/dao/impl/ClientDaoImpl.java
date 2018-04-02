@@ -1,6 +1,6 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.consts.ErrorCodes;
 import com.mp.onlinestore.consts.JdbcConstants;
 import com.mp.onlinestore.dao.ClientDao;
@@ -24,7 +24,7 @@ public class ClientDaoImpl implements ClientDao {
 	static Logger log = Logger.getLogger(ClientDaoImpl.class.toString());
 
 	@Override
-	public boolean createClient(final Client client) throws GenericException{
+	public Client createClient(final Client client) throws GenericException{
 		log.info("Need to store client into db: " + client);
 
 		Connection conn = ConnectToDb.getConnection();
@@ -34,11 +34,11 @@ public class ClientDaoImpl implements ClientDao {
 			int rowsInserted = st.executeUpdate();
 			if (rowsInserted >= 1) {
 				st.close();
-				return true;
+				return client;
 			} else {
 				System.out.println("No clients were saved");
 				st.close();
-				return false;
+				return null;
 			}
 		} catch (SQLException e) {
 			throw new GenericException(ErrorCodes.DB_TABLE_ERROR);
@@ -82,7 +82,7 @@ public class ClientDaoImpl implements ClientDao {
 	}
 
 	@Override
-	public boolean updateClient(final Client client) throws GenericException{
+	public Client updateClient(final Client client) throws GenericException{
 		log.info("Need to update client into db with new attributes: " + client);
 		Connection conn = ConnectToDb.getConnection();
 
@@ -92,11 +92,11 @@ public class ClientDaoImpl implements ClientDao {
 			int rowsUpdated = st.executeUpdate();
 			if (rowsUpdated >= 1) {
 				st.close();
-				return true;
+				return client;
 			} else {
 				System.out.println("No clients were updated");
 				st.close();
-				return false;
+				return null;
 			}
 		} catch (SQLException e) {
 //            e.printStackTrace();
@@ -107,8 +107,11 @@ public class ClientDaoImpl implements ClientDao {
 	}
 
 	@Override
-	public boolean deleteClient(final Long clientId) throws GenericException{
+	public Client deleteClient(final Long clientId) throws GenericException{
 		log.info("Need to delete client from db with ID: " + clientId);
+
+		Client client = new Client();
+		client.setClientId(clientId);
 
 		Connection conn = ConnectToDb.getConnection();
 		try {
@@ -116,11 +119,11 @@ public class ClientDaoImpl implements ClientDao {
 			int rowsDeleted = st.executeUpdate();
 			if (rowsDeleted >= 1) {
 				st.close();
-				return true;
+				return client;
 			} else {
 				System.out.println("No clients were deleted");
 				st.close();
-				return false;
+				return null;
 			}
 		} catch (SQLException e) {
 //            e.printStackTrace();

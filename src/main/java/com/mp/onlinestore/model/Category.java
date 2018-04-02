@@ -2,8 +2,8 @@ package com.mp.onlinestore.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Formatter;
+import java.util.List;
 
 @Entity
 @Table(name="categories")
@@ -19,13 +19,13 @@ public class Category implements Serializable {
     private String categoryName;
 
     @OneToMany(mappedBy = "category", targetEntity = Product.class)
-    private Collection<Product> productList;
+    private List<Product> productList;
 
-    public Collection<Product> getProductList() {
+    public List<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(Collection<Product> productList) {
+    public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
 

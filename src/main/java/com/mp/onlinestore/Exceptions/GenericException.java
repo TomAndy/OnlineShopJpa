@@ -1,4 +1,4 @@
-package com.mp.onlinestore.Exceptions;
+package com.mp.onlinestore.exceptions;
 
 import com.mp.onlinestore.consts.ErrorCodes;
 

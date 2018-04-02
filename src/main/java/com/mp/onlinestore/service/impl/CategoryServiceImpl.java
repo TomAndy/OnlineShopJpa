@@ -1,6 +1,6 @@
 package com.mp.onlinestore.service.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.dao.CategoryDao;
 import com.mp.onlinestore.model.Category;
 import com.mp.onlinestore.service.CategoryService;
@@ -19,13 +19,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     static Logger log = Logger.getLogger(CategoryServiceImpl.class.toString());
 
-    public boolean createCategory(final Category category) throws GenericException {
+    public Category createCategory(final Category category) throws GenericException {
         log.info("Starting to create category: " + category);
 
-        boolean isCreated = categoryDao.createCategory(category);
+        Category categoryCreated = categoryDao.createCategory(category);
 
-        log.info("Finishing to create category. Category created: " + isCreated);
-        return isCreated;
+        log.info("Finishing to create category. Category created: " + categoryCreated);
+        return categoryCreated;
     }
 
     public Category findById(final Long categoryID) throws GenericException {
@@ -37,22 +37,22 @@ public class CategoryServiceImpl implements CategoryService {
         return category;
     }
 
-    public boolean updateCategory(final Category category) throws GenericException {
+    public Category updateCategory(final Category category) throws GenericException {
         log.info("Starting to update category with new attributes: " + category);
 
-        boolean isUpdated = categoryDao.updateCategory(category);
+        Category categoryUpdated = categoryDao.updateCategory(category);
 
-        log.info("Finishing to update category. Category updated: " + isUpdated);
-        return isUpdated;
+        log.info("Finishing to update category. Category updated: " + categoryUpdated);
+        return categoryUpdated;
     }
 
-    public boolean deleteCategory(final Long categoryID) throws GenericException {
+    public Category deleteCategory(final Long categoryID) throws GenericException {
         log.info("Starting to delete category with ID: " + categoryID);
 
-        boolean isDeleted = categoryDao.deleteCategory(categoryID);
+        Category category = categoryDao.deleteCategory(categoryID);
 
-        log.info("Finishing to delete category. Category deleted: " + isDeleted);
-        return isDeleted;
+        log.info("Finishing to delete category. Category deleted: " + category);
+        return category;
     }
 
     public Collection<Category> findAll() throws GenericException {

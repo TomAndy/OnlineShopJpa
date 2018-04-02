@@ -1,6 +1,6 @@
 package com.mp.onlinestore;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.dao.ClientDao;
 import com.mp.onlinestore.model.Client;
 import com.mp.onlinestore.service.impl.ClientServiceImpl;
@@ -32,11 +32,12 @@ public class ClientServiceImplTest {
     public void createClientTest() throws GenericException {
         Client clientDB = new Client(1,null, null, null);
 
-        Mockito.when(clientDaoMock.createClient(clientDB)).thenReturn(true);
+        Client client = Mockito.mock(Client.class);
+        Mockito.when(clientDaoMock.createClient(clientDB)).thenReturn(client);
 
-        boolean res = unit.createClient(clientDB);
+        Client res = unit.createClient(clientDB);
 
-        Assert.assertTrue(res);
+        Assert.assertNotNull(res);
 
         Mockito.verify(clientDaoMock, Mockito.times(1)).createClient(clientDB);
         Mockito.verifyNoMoreInteractions(clientDaoMock);
@@ -46,11 +47,11 @@ public class ClientServiceImplTest {
     public void createClientTest_Negative() throws GenericException {
         Client clientDB = new Client(1,null, null, null);
 
-        Mockito.when(clientDaoMock.createClient(clientDB)).thenReturn(false);
+        Mockito.when(clientDaoMock.createClient(clientDB)).thenReturn(null);
 
-        boolean res = unit.createClient(clientDB);
+        Client res = unit.createClient(clientDB);
 
-        Assert.assertFalse(res);
+        Assert.assertNull(res);
 
         Mockito.verify(clientDaoMock, Mockito.times(1)).createClient(clientDB);
         Mockito.verifyNoMoreInteractions(clientDaoMock);
@@ -74,12 +75,13 @@ public class ClientServiceImplTest {
     @Test
     public void updateClientTest() throws GenericException {
         Client clientDB = new Client(1,null, null, null);
+        Client client = Mockito.mock(Client.class);
 
-        Mockito.when(clientDaoMock.updateClient(clientDB)).thenReturn(true);
+        Mockito.when(clientDaoMock.updateClient(clientDB)).thenReturn(client);
 
-        boolean res = unit.updateClient(clientDB);
+        Client res = unit.updateClient(clientDB);
 
-        Assert.assertTrue(res);
+        Assert.assertNotNull(client);
 
         Mockito.verify(clientDaoMock, Mockito.times(1)).updateClient(clientDB);
         Mockito.verifyNoMoreInteractions(clientDaoMock);
@@ -88,12 +90,13 @@ public class ClientServiceImplTest {
     @Test
     public void deleteClientTest() throws GenericException {
         long userId = 1;
+        Client client = Mockito.mock(Client.class);
 
-        Mockito.when(clientDaoMock.deleteClient(userId)).thenReturn(true);
+        Mockito.when(clientDaoMock.deleteClient(userId)).thenReturn(client);
 
-        boolean res = unit.deleteClient(userId);
+        Client res = unit.deleteClient(userId);
 
-        Assert.assertTrue(res);
+        Assert.assertNotNull(res);
 
         Mockito.verify(clientDaoMock, Mockito.times(1)).deleteClient(userId);
         Mockito.verifyNoMoreInteractions(clientDaoMock);

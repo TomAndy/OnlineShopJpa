@@ -1,6 +1,6 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.dao.ProductDao;
 import com.mp.onlinestore.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,9 @@ public class ProductDaoImplJpa implements ProductDao{
     private EntityManager entityManager;
 
     @Override
-    public boolean createProduct(Product product) throws GenericException {
+    public Product createProduct(Product product) throws GenericException {
         entityManager.persist(product);
-        return true;
+        return product;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ProductDaoImplJpa implements ProductDao{
     }
 
     @Override
-    public boolean updateProduct(Product product) throws GenericException {
+    public Product updateProduct(Product product) throws GenericException {
         Product productNew = entityManager.find(Product.class, product.getProductId());
 
         if(productNew != null)
@@ -42,21 +42,22 @@ public class ProductDaoImplJpa implements ProductDao{
             productNew.setProductColor(product.getProductColor());
 //            productNew.setCategoryId(product.getCategoryId());
             entityManager.persist(productNew);
-            return true;
+            return productNew;
         }
-        else return false;
+        else return null;
     }
 
     @Override
-    public boolean deleteProduct(Long productId) throws GenericException {
+    public Product deleteProduct(Long productId) throws GenericException {
         Product productNew = entityManager.find(Product.class, productId);
+        Product productDeleted = entityManager.find(Product.class, productId);
 
         if(productNew != null)
         {
             entityManager.remove(productNew);
-            return true;
+            return productDeleted;
         }
-        else return false;
+        else return null;
     }
 
     @Override

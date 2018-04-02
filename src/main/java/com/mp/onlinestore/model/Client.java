@@ -2,7 +2,7 @@ package com.mp.onlinestore.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name="clients")
@@ -24,14 +24,14 @@ public class Client implements Serializable {
 	@Column(name = "client_email")
 	private String clientEmail;
 
-	@OneToMany(mappedBy = "client", targetEntity = Order.class)
-	private Collection<Order> orderList;
+	@OneToMany(mappedBy = "client", targetEntity = Order.class, fetch = FetchType.LAZY)
+	private List<Order> orderList;
 
-	public Collection<Order> getOrderList() {
+	public List<Order> getOrderList() {
 		return orderList;
 	}
 
-	public void setOrderList(Collection<Order> orderList) {
+	public void setOrderList(List<Order> orderList) {
 		this.orderList = orderList;
 	}
 

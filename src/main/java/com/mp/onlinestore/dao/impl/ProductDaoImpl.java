@@ -1,6 +1,6 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.consts.ErrorCodes;
 import com.mp.onlinestore.consts.JdbcConstants;
 import com.mp.onlinestore.dao.ProductDao;
@@ -89,7 +89,7 @@ public class ProductDaoImpl implements ProductDao{
     }
 
 
-    public boolean createProduct(final Product product) throws GenericException {
+    public Product createProduct(final Product product) throws GenericException {
         Connection conn = new ConnectToDb().getConnection();
 
         try {
@@ -99,12 +99,12 @@ public class ProductDaoImpl implements ProductDao{
             int rowsInserted = st.executeUpdate();
             if(rowsInserted>=1) {
                 st.close();
-                return true;
+                return product;
             }
             else {
                 System.out.println("No products were saved");
                 st.close();
-                return false;
+                return null;
             }
         } catch (SQLException e) {
 //            e.printStackTrace();
@@ -115,7 +115,7 @@ public class ProductDaoImpl implements ProductDao{
     }
 
 
-    public boolean updateProduct(final Product product) throws GenericException {
+    public Product updateProduct(final Product product) throws GenericException {
         Connection conn = new ConnectToDb().getConnection();
 
         try {
@@ -124,12 +124,12 @@ public class ProductDaoImpl implements ProductDao{
             int rowsUpdated = st.executeUpdate();
             if(rowsUpdated>=1) {
                 st.close();
-                return true;
+                return product;
             }
             else {
                 System.out.println("No products were updated");
                 st.close();
-                return false;
+                return null;
             }
         } catch (SQLException e) {
 //            e.printStackTrace();
@@ -140,7 +140,9 @@ public class ProductDaoImpl implements ProductDao{
     }
 
 
-    public boolean deleteProduct(final Long productID) throws GenericException {
+    public Product deleteProduct(final Long productID) throws GenericException {
+        Product product = new Product();
+        product.setProductId(productID);
         Connection conn = new ConnectToDb().getConnection();
 
         try {
@@ -148,12 +150,12 @@ public class ProductDaoImpl implements ProductDao{
             int rowsDeleted = st.executeUpdate();
             if(rowsDeleted>=1) {
                 st.close();
-                return true;
+                return product;
             }
             else {
                 System.out.println("No products were deleted");
                 st.close();
-                return false;
+                return null;
             }
         }
         catch (SQLException e) {

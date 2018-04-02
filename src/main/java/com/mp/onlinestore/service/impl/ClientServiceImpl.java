@@ -1,6 +1,6 @@
 package com.mp.onlinestore.service.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.dao.ClientDao;
 import com.mp.onlinestore.model.Client;
 import com.mp.onlinestore.service.ClientService;
@@ -22,13 +22,13 @@ public class ClientServiceImpl implements ClientService {
 	static Logger log = Logger.getLogger(ClientServiceImpl.class.toString());
 
 	@Override
-	public boolean createClient(final Client client) throws GenericException{
+	public Client createClient(final Client client) throws GenericException{
 		log.info("Starting to create client: " + client);
 
-		boolean isCreated = clientDao.createClient(client);
+		Client clientCreated = clientDao.createClient(client);
 
-		log.info("Finishing to create client. Client created: " + isCreated);
-		return isCreated;
+		log.info("Finishing to create client. Client created: " + clientCreated);
+		return clientCreated;
 	}
 
 	@Override
@@ -42,23 +42,23 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public boolean updateClient(final Client client) throws GenericException {
+	public Client updateClient(final Client client) throws GenericException {
 		log.info("Starting to update client with new attributes: " + client);
 
-		boolean isUpdated = clientDao.updateClient(client);
+		Client clientUpdated = clientDao.updateClient(client);
 
-		log.info("Finishing to update client. Client updated: " + isUpdated);
-		return isUpdated;
+		log.info("Finishing to update client. Client updated: " + clientUpdated);
+		return clientUpdated;
 	}
 
 	@Override
-	public boolean deleteClient(final Long clientId) throws GenericException {
+	public Client deleteClient(final Long clientId) throws GenericException {
 		log.info("Starting to delete client with ID: " + clientId);
 
-		boolean isDeleted = clientDao.deleteClient(clientId);
+		Client client = clientDao.deleteClient(clientId);
 
-		log.info("Finishing to delete client. Client deleted: " + isDeleted);
-		return isDeleted;
+		log.info("Finishing to delete client. Client deleted: " + client);
+		return client;
 	}
 
 	@Override

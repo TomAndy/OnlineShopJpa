@@ -1,6 +1,6 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.dao.CategoryDao;
 import com.mp.onlinestore.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,44 +21,50 @@ public class CategoryDaoImplJpa implements CategoryDao {
     private EntityManager entityManager;
 
     @Override
-    public boolean createCategory(Category category) throws GenericException {
+    public Category createCategory(Category category) throws GenericException {
         entityManager.persist(category);
-        return true;
+        return category;
     }
 
     @Override
     public Category findById(Long categoryID) throws GenericException {
-        return entityManager.find(Category.class, categoryID);
+        if(categoryID == null) {
+            return null;
+        }
+        else {
+            return entityManager.find(Category.class, categoryID);
+        }
     }
 
     @Override
-    public boolean updateCategory(Category category) throws GenericException {
+    public Category updateCategory(Category category) throws GenericException {
         Category categoryNew = entityManager.find(Category.class, category.getCategoryId());
 
         if(categoryNew != null)
         {
             categoryNew.setCategoryName(category.getCategoryName());
             entityManager.persist(categoryNew);
-            return true;
+            return categoryNew;
         }
-        else return false;
+        else return null;
     }
 
     @Override
-    public boolean deleteCategory(Long categoryID) throws GenericException {
+    public Category deleteCategory(Long categoryID) throws GenericException {
         Category categoryNew = entityManager.find(Category.class, categoryID);
+        Category categoryDeleted = entityManager.find(Category.class, categoryID);
 
         if(categoryNew != null)
         {
             entityManager.remove(categoryNew);
-            return true;
+            return categoryDeleted;
         }
-        else return false;
+        else return null;
     }
 
     @Override
     public Collection<Category> findAll() throws GenericException {
-        String hql = "FROM Category as atcl ORDER BY atcl.categoryId";
+        String hql = "select new Category(atcl.categoryId, atcl.categoryName) FROM Category as atcl ORDER BY atcl.categoryId";
         return (List<Category>) entityManager.createQuery(hql).getResultList();
     }
 }

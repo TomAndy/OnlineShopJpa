@@ -1,8 +1,10 @@
 package com.mp.onlinestore.model;
 
+import com.mp.onlinestore.enums.OrderStatusEnum;
+
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name="orders")
@@ -12,55 +14,56 @@ public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Long order_id;
+    private Long orderId;
 
-   // @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    //private StatusTypes status;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "order_status")
+    private OrderStatusEnum orderStatus;
 
-    @ManyToMany
-    private Collection<Product> productList;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "Orders_Products", joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> productList;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "client_id")
     private Client client;
 
-    public Order(Long order_id, String status) {
-        this.order_id = order_id;
-        this.status = status;
+    public Order(Long orderId, OrderStatusEnum orderStatus) {
+        this.orderId = orderId;
+        this.orderStatus = orderStatus;
 //        this.productList = productList;
     }
 
-    public Order(String status) {
-        this.status = status;
+    public Order(OrderStatusEnum orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public Order() {}
 
     public Long getOrderId() {
-        return order_id;
+        return orderId;
     }
 
-    public void setOrderId(Long order_id) {
-        this.order_id = order_id;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-//    @Enumerated(EnumType.STRING)
-    public String getOrderStatus() {
-        return status;
+    @Enumerated(EnumType.STRING)
+    public OrderStatusEnum getOrderStatus() {
+        return orderStatus;
     }
 
-//    @Enumerated(EnumType.STRING)
-    public void setOrderStatus(String status) {
-        this.status = status;
+    @Enumerated(EnumType.STRING)
+    public void setOrderStatus(OrderStatusEnum orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
-    public Collection<Product> getProductList() {
+    public List<Product> getProductList() {
         return productList;
     }
 
-    public void setProductList(Collection<Product> productList) {
+    public void setProductList(List<Product> productList) {
         this.productList = productList;
     }
 
@@ -75,8 +78,8 @@ public class Order implements Serializable {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Order{");
-        sb.append("orderId=").append(order_id);
-        sb.append(", orderStatus='").append(status).append('\'');
+        sb.append("orderId=").append(orderId);
+        sb.append(", orderStatus='").append(orderStatus).append('\'');
         sb.append('}');
         return sb.toString();
     }

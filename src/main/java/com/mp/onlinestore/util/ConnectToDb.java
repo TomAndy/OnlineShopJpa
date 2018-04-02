@@ -1,6 +1,6 @@
 package com.mp.onlinestore.util;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.consts.ErrorCodes;
 
 import java.sql.Connection;

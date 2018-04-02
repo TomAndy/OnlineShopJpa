@@ -1,7 +1,8 @@
 package com.mp.onlinestore.service.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
 import com.mp.onlinestore.dao.OrderDao;
+import com.mp.onlinestore.enums.OrderStatusEnum;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.model.Order;
 import com.mp.onlinestore.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +20,14 @@ public class OrderServiceImpl implements OrderService{
 
     static Logger log = Logger.getLogger(ClientServiceImpl.class.toString());
 
-
     @Override
-    public boolean createOrder(Order order) throws GenericException {
+    public Order createOrder(Order order) throws GenericException {
         log.info("Starting to create order: " + order);
 
-        boolean isCreated = orderDao.createOrder(order);
+        Order orderCreated = orderDao.createOrder(order);
 
-        log.info("Finishing to create order. Order created: " + isCreated);
-        return isCreated;
+        log.info("Finishing to create order. Order created");
+        return orderCreated;
     }
 
     @Override
@@ -41,23 +41,23 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public boolean updateOrder(Order order) throws GenericException {
+    public Order updateOrder(Order order) throws GenericException {
         log.info("Starting to update order with new attributes: " + order);
 
-        boolean isUpdated = orderDao.updateOrder(order);
+        Order updatedOrder = orderDao.updateOrder(order);
 
-        log.info("Finishing to update order. Order updated: " + isUpdated);
-        return isUpdated;
+        log.info("Finishing to update order. Order updated: " + updatedOrder);
+        return updatedOrder;
     }
 
     @Override
-    public boolean deleteOrder(Long orderId) throws GenericException {
+    public Order deleteOrder(Long orderId) throws GenericException {
         log.info("Starting to delete order with ID: " + orderId);
 
-        boolean isDeleted = orderDao.deleteOrder(orderId);
+        Order order = orderDao.deleteOrder(orderId);
 
-        log.info("Finishing to delete order. Order deleted: " + isDeleted);
-        return isDeleted;
+        log.info("Finishing to delete order. Order deleted: " + order);
+        return order;
     }
 
     @Override
@@ -68,6 +68,16 @@ public class OrderServiceImpl implements OrderService{
 
         log.info("Finish to read all orders from DB");
 
+        return orderList;
+    }
+
+    @Override
+    public Collection<Order> findByStatus(OrderStatusEnum orderStatus) throws GenericException {
+        log.info("Starting to read orders by status: " + orderStatus);
+
+        Collection<Order> orderList = orderDao.findByStatus(orderStatus);
+
+        log.info("Finishing to read orders from DB");
         return orderList;
     }
 }

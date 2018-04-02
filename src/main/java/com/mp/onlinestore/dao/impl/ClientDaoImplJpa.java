@@ -1,6 +1,6 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.dao.ClientDao;
 import com.mp.onlinestore.model.Client;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +21,9 @@ public class ClientDaoImplJpa implements ClientDao {
     private EntityManager entityManager;
 
     @Override
-    public boolean createClient(Client client) throws GenericException {
+    public Client createClient(Client client) throws GenericException {
         entityManager.persist(client);
-        return true;
+        return client;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class ClientDaoImplJpa implements ClientDao {
     }
 
     @Override
-    public boolean updateClient(Client client) throws GenericException {
+    public Client updateClient(Client client) throws GenericException {
         Client clientNew = entityManager.find(Client.class, client.getClientId());
 
         if(clientNew != null)
@@ -42,20 +42,22 @@ public class ClientDaoImplJpa implements ClientDao {
             clientNew.setClientEmail(client.getClientEmail());
 //            userNew.setProductId(user.getProductId());
             entityManager.persist(clientNew);
-            return true;
+            return clientNew;
         }
-        else return false;
+        else return null;
     }
 
     @Override
-    public boolean deleteClient(Long clientId) throws GenericException {
+    public Client deleteClient(Long clientId) throws GenericException {
         Client clientNew = entityManager.find(Client.class, clientId);
+        Client deletedClient = new Client();
+        deletedClient.setClientId(clientId);
         if(clientNew != null)
         {
             entityManager.remove(clientNew);
-            return true;
+            return deletedClient;
         }
-        else return false;
+        else return null;
     }
 
     @Override

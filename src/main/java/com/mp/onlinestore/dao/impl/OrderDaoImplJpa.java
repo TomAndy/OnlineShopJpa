@@ -1,13 +1,15 @@
 package com.mp.onlinestore.dao.impl;
 
-import com.mp.onlinestore.Exceptions.GenericException;
 import com.mp.onlinestore.dao.OrderDao;
+import com.mp.onlinestore.enums.OrderStatusEnum;
+import com.mp.onlinestore.exceptions.GenericException;
 import com.mp.onlinestore.model.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
@@ -21,9 +23,9 @@ public class OrderDaoImplJpa implements OrderDao {
     private EntityManager entityManager;
 
     @Override
-    public boolean createOrder(Order order) throws GenericException {
+    public Order createOrder(Order order) throws GenericException {
         entityManager.persist(order);
-        return true;
+        return order;
     }
 
     @Override
@@ -32,33 +34,42 @@ public class OrderDaoImplJpa implements OrderDao {
     }
 
     @Override
-    public boolean updateOrder(Order order) throws GenericException {
+    public Order updateOrder(Order order) throws GenericException {
         Order orderNew = entityManager.find(Order.class, order.getOrderId());
 
         if(orderNew != null)
         {
-            orderNew.setOrderStatus(order.getOrderStatus());
+            orderNew.setProductList(order.getProductList());
             entityManager.persist(orderNew);
-            return true;
+            return orderNew;
         }
-        else return false;
+        else return null;
     }
 
     @Override
-    public boolean deleteOrder(Long orderId) throws GenericException {
+    public Order deleteOrder(Long orderId) throws GenericException {
         Order orderNew = entityManager.find(Order.class, orderId);
+        Order deletedOrder = new Order();
+        deletedOrder.setOrderId(orderId);
 
         if(orderNew != null)
         {
             entityManager.remove(orderNew);
-            return true;
+            return deletedOrder;
         }
-        else return false;
+        else return null;
     }
 
     @Override
     public Collection<Order> findAll() throws GenericException {
-        String hql = "FROM Order as atcl ORDER BY atcl.order_id";
+        String hql = "FROM Order as atcl ORDER BY atcl.orderId";
         return (List<Order>) entityManager.createQuery(hql).getResultList();
+    }
+
+    @Override
+    public Collection<Order> findByStatus(OrderStatusEnum orderStatus) throws GenericException {
+        TypedQuery<Order> q = (TypedQuery<Order>) entityManager.createQuery("select atcl from Order as atcl where orderStatus = :status order by orderId");
+        q.setParameter("status",orderStatus);
+        return (List<Order>) q.getResultList();
     }
 }

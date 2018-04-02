@@ -2,8 +2,8 @@ package com.mp.onlinestore.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Formatter;
+import java.util.List;
 
 @Entity
 @Table(name="products")
@@ -24,12 +24,20 @@ public class Product implements Serializable{
     @Column(name = "product_color")
     private String productColor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(mappedBy = "productList")
-    private Collection<Order> orderList;
+    @ManyToMany(mappedBy = "productList", fetch = FetchType.LAZY)
+    private List<Order> orderList;
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
 
     public void setProductId(Long productId) {
         this.productId = productId;
@@ -63,11 +71,11 @@ public class Product implements Serializable{
         return productColor;
     }
 
-    public Collection<Order> getOrderList() {
+    public List<Order> getOrderList() {
         return orderList;
     }
 
-    public void setOrderList(Collection<Order> orderList) {
+    public void setOrderList(List<Order> orderList) {
         this.orderList = orderList;
     }
 
